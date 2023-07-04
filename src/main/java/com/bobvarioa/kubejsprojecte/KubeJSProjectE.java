@@ -2,6 +2,7 @@ package com.bobvarioa.kubejsprojecte;
 
 import com.bobvarioa.kubejsprojecte.kubejs.KubeJSProjectEPlugin;
 import com.bobvarioa.kubejsprojecte.projecte.KubeJSEMCMapperAfter;
+import dev.latvian.mods.kubejs.script.ScriptType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -22,10 +23,10 @@ public class KubeJSProjectE {
 
     public static void serverReload(TagsUpdatedEvent event) {
         KubeJSEMCMapperAfter.INSTANCE.items.clear();
-        KubeJSProjectEPlugin.SET_EMC.post(KubeJSProjectEPlugin.SetEMCEventJS.INSTANCE);
+        KubeJSProjectEPlugin.SET_EMC.post(ScriptType.SERVER, KubeJSProjectEPlugin.SetEMCEventJS.INSTANCE);
     }
 
     public static void gameStart(ServerStartedEvent event) {
-        KubeJSProjectEPlugin.WORLD_TRANS.post(KubeJSProjectEPlugin.RegisterWorldTransmutationsEventJS.INSTANCE);
+        KubeJSProjectEPlugin.WORLD_TRANS.post(ScriptType.SERVER, KubeJSProjectEPlugin.RegisterWorldTransmutationsEventJS.INSTANCE);
     }
 }
