@@ -25,7 +25,7 @@ description = '''
 [[dependencies.kubejsprojecte]]
     modId = "kubejs"
     mandatory = true
-    versionRange = "[1902.6.1-build.234,)"
+    versionRange = "[1902.6.1-build.268,)"
     ordering = "NONE"
     side = "BOTH"
 [[dependencies.kubejsprojecte]]
