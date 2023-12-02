@@ -42,7 +42,7 @@ public class KubeJSProjectEPlugin extends KubeJSPlugin {
             var cap = player.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY);
             if (cap.isPresent()) {
                 var emc = cap.resolve().get();
-                emc.setEmc(emc.getEmc().add(new BigDecimal(num).toBigInteger()));
+                emc.setEmc(new BigDecimal(num).toBigInteger());
             }
         }
 
