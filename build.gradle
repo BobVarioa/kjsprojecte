@@ -95,14 +95,14 @@ publisher {
     setModrinthID rootProject.modrinth_id
 
     setVersionType "release"
-    setDisplayName "[$rootProject.minecraft_version] ProjectE - KubeJS | $rootProject.mod_version"
-    setGameVersions rootProject.minecraft_version
-    setLoaders([project.name])
+    setDisplayName "[$project.minecraft_version] ProjectE - KubeJS | $rootProject.mod_version"
+    setGameVersions project.minecraft_version
+    setLoaders(["neoforge"])
     setCurseEnvironment "both"
     setArtifact remapJar
-    setVersion rootProject.minecraft_version
+    setVersion project.minecraft_version
     setJavaVersions([java.targetCompatibility])
-    setChangelog "Initiale Release"
+    setChangelog "Initial Release"
 }
 
 

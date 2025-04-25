@@ -40,7 +40,7 @@ public class KubeJSEMCMapperAfter implements IEMCMapper<NormalizedSimpleStack, L
     @Override
     public void addMappings(IMappingCollector<NormalizedSimpleStack, Long> mapper, ReloadableServerResources reloadableServerResources, RegistryAccess registryAccess, ResourceManager resourceManager) {
         for (var entry : items.entrySet()) {
-            mapper.setValueBefore(NSSItem.createItem(entry.getKey()), entry.getValue());
+            mapper.setValueAfter(NSSItem.createItem(entry.getKey()), entry.getValue());
         }
     }
 }
