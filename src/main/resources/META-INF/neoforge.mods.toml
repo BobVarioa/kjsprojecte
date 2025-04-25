@@ -35,7 +35,7 @@ side = "BOTH"
 [[dependencies.kubejsprojecte]]
 modId = "projecte"
 mandatory = true
-versionRange = "[1.0.1,)"
+versionRange = "[1.0,)"
 ordering = "NONE"
 side = "BOTH"
 

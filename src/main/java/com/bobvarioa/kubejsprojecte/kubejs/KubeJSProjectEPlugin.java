@@ -1,6 +1,7 @@
 package com.bobvarioa.kubejsprojecte.kubejs;
 
 import com.bobvarioa.kubejsprojecte.projecte.KubeJSEMCMapperAfter;
+import com.bobvarioa.kubejsprojecte.projecte.KubeJSEMCMapperBefore;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.event.EventHandler;
@@ -8,7 +9,6 @@ import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.script.BindingRegistry;
 import moze_intel.projecte.api.capabilities.PECapabilities;
-import moze_intel.projecte.api.world_transmutation.SimpleWorldTransmutation;
 import moze_intel.projecte.api.world_transmutation.WorldTransmutation;
 import moze_intel.projecte.world_transmutation.WorldTransmutationManager;
 import net.minecraft.world.entity.player.Player;
@@ -62,7 +62,7 @@ public class KubeJSProjectEPlugin implements KubeJSPlugin {
         public static SetEMCEventJS INSTANCE = new SetEMCEventJS();
 
         public void setEMC(Item item, long emc) {
-            KubeJSEMCMapperAfter.INSTANCE.items.put(item, emc);
+            setEMCAfter(item, emc);
         }
 
         public void setEMCAfter(Item item, long emc) {
@@ -70,7 +70,7 @@ public class KubeJSProjectEPlugin implements KubeJSPlugin {
         }
 
         public void setEMCBefore(Item item, long emc) {
-            KubeJSEMCMapperAfter.INSTANCE.items.put(item, emc);
+            KubeJSEMCMapperBefore.INSTANCE.items.put(item, emc);
         }
     }
 

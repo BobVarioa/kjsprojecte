@@ -27,7 +27,7 @@ public class KubeJSEMCMapperBefore implements IEMCMapper<NormalizedSimpleStack, 
 
     @Override
     public String getTranslationKey() {
-        return "";
+        return  "mapping.mapper.kubejsprojecte";
     }
 
     @Override
