@@ -1,0 +1,47 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "kubejsprojecte"
+version = "${version}"
+displayName = "KubeJS ProjectE"
+authors = "BobVarioa"
+description = '''
+
+'''
+
+[[dependencies.kubejsprojecte]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.kubejsprojecte]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.kubejsprojecte]]
+modId = "architectury"
+type = "required"
+versionRange = "[13.0.8,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.kubejsprojecte]]
+modId = "projecte"
+mandatory = true
+versionRange = "[1.0.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.kubejsprojecte]]
+modId = "kubejs"
+mandatory = true
+versionRange = "[2101.7.1-build.181,)"
+ordering = "NONE"
+side = "BOTH"
