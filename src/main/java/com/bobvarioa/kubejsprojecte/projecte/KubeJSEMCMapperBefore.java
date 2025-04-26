@@ -6,9 +6,9 @@ import moze_intel.projecte.api.mapper.collector.IMappingCollector;
 import moze_intel.projecte.api.nss.NSSItem;
 import moze_intel.projecte.api.nss.NormalizedSimpleStack;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.item.Item;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class KubeJSEMCMapperBefore implements IEMCMapper<NormalizedSimpleStack, 
         return "Allows KubeJS ProjectE to function";
     }
 
-    public Map<Item, Long> items = new HashMap<>();
+    public Map<ResourceLocation, Long> items = new HashMap<>();
 
     @Override
     public void addMappings(IMappingCollector<NormalizedSimpleStack, Long> mapper, ReloadableServerResources reloadableServerResources, RegistryAccess registryAccess, ResourceManager resourceManager) {

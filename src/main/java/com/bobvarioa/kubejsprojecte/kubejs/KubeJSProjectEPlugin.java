@@ -11,8 +11,8 @@ import dev.latvian.mods.kubejs.script.BindingRegistry;
 import moze_intel.projecte.api.capabilities.PECapabilities;
 import moze_intel.projecte.api.world_transmutation.WorldTransmutation;
 import moze_intel.projecte.world_transmutation.WorldTransmutationManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 import java.math.BigDecimal;
@@ -61,15 +61,15 @@ public class KubeJSProjectEPlugin implements KubeJSPlugin {
     public static class SetEMCEventJS implements KubeEvent {
         public static SetEMCEventJS INSTANCE = new SetEMCEventJS();
 
-        public void setEMC(Item item, long emc) {
+        public void setEMC(ResourceLocation item, long emc) {
             setEMCAfter(item, emc);
         }
 
-        public void setEMCAfter(Item item, long emc) {
+        public void setEMCAfter(ResourceLocation item, long emc) {
             KubeJSEMCMapperAfter.INSTANCE.items.put(item, emc);
         }
 
-        public void setEMCBefore(Item item, long emc) {
+        public void setEMCBefore(ResourceLocation item, long emc) {
             KubeJSEMCMapperBefore.INSTANCE.items.put(item, emc);
         }
     }
