@@ -1,21 +1,70 @@
 plugins {
-    id 'dev.architectury.loom' version '1.9-SNAPSHOT'
+    id 'base'
+    id 'java'
     id 'maven-publish'
-    id "com.hypherionmc.modutils.modpublisher" version "2.1.6"
-    id "co.uzzu.dotenv.gradle" version "4.0.0"
+    id 'net.neoforged.moddev' version "2.0.10-beta"
 }
 
-group = project.maven_group
+ext.ENV = System.getenv()
 version = project.mod_version
+group = project.maven_group
 
-base {
-    archivesName = project.archives_name
+base.archivesName = project.archives_name
+
+neoForge {
+    version = project.neoforge_version
+
+    runs {
+        configureEach {
+            logLevel = org.slf4j.event.Level.INFO
+        }
+
+        client {
+            client()
+
+            if (ENV.MC_CLIENT_ARGS) {
+                programArguments.addAll(ENV.MC_CLIENT_ARGS.split(' '))
+            }
+
+            jvmArguments.addAll("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition")
+            gameDirectory = file 'run'
+        }
+
+        server {
+            server()
+            programArgument("--nogui")
+            gameDirectory = file 'run_server'
+        }
+    }
 }
+
+compileJava {
+    options.encoding = "UTF-8"
+    options.release.set(21)
+}
+
+java {
+    sourceCompatibility = targetCompatibility = '21'
+    withSourcesJar()
+}
+
 
 repositories {
+    mavenLocal()
+    mavenCentral()
+
     maven {
         name = 'NeoForged'
         url = 'https://maven.neoforged.net/releases'
+    }
+
+
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+        content {
+            includeGroup "org.parchmentmc.data"
+        }
     }
 
     maven {
@@ -39,21 +88,22 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
+    maven {
+        url "https://maven.architectury.dev/"
+        content {
+            includeGroup "dev.architectury"
+        }
+    }
 }
 
-loom {
-    silentMojangMappingsLicense()
-}
 
 dependencies {
-    minecraft "net.minecraft:minecraft:$project.minecraft_version"
-    mappings loom.officialMojangMappings()
-    neoForge "net.neoforged:neoforge:$project.neoforge_version"
+    api "dev.latvian.mods:kubejs-neoforge:$kubejs_version"
 
-    modImplementation "dev.latvian.mods:kubejs-neoforge:$kubejs_version"
-    modImplementation "dev.latvian.mods:rhino:$rhino_version"
-    modImplementation "curse.maven:projecte-226410:$projecte_version"
-    modImplementation "dev.architectury:architectury-neoforge:$architectury_version"
+    implementation "dev.latvian.mods:rhino:$rhino_version"
+    implementation "curse.maven:projecte-226410:$projecte_version"
+    implementation "dev.architectury:architectury-neoforge:$architectury_version"
 }
 
 processResources {
@@ -61,6 +111,20 @@ processResources {
 
     filesMatching('META-INF/neoforge.mods.toml') {
         expand version: project.version
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "kjsprojecte",
+                "Specification-Vendor"    : "bobvarioa",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : version,
+                "Implementation-Vendor"   : "bobvarioa",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
 }
 
@@ -74,35 +138,3 @@ java {
 tasks.withType(JavaCompile).configureEach {
     it.options.release = 21
 }
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    repositories {}
-}
-
-publisher {
-    apiKeys {
-        if (env.isPresent("CURSE_TOKEN")) curseforge env.CURSE_TOKEN.value
-        if (env.isPresent("MODRINTH_TOKEN")) modrinth env.MODRINTH_TOKEN.value
-    }
-
-    setCurseID rootProject.curseforge_id
-    setModrinthID rootProject.modrinth_id
-
-    setVersionType "release"
-    setDisplayName "[$project.minecraft_version] ProjectE - KubeJS | $rootProject.mod_version"
-    setGameVersions project.minecraft_version
-    setLoaders(["neoforge"])
-    setCurseEnvironment "both"
-    setArtifact remapJar
-    setVersion project.minecraft_version
-    setJavaVersions([java.targetCompatibility])
-    setChangelog "Initial Release"
-}
-
-
