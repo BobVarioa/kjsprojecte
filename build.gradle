@@ -1,8 +1,7 @@
 plugins {
     id 'base'
     id 'java'
-    id 'maven-publish'
-    id 'net.neoforged.moddev' version "2.0.10-beta"
+    id 'net.neoforged.moddev' version "2.0.82"
 }
 
 ext.ENV = System.getenv()
@@ -34,6 +33,12 @@ neoForge {
             server()
             programArgument("--nogui")
             gameDirectory = file 'run_server'
+        }
+    }
+
+    mods {
+        kubejsprojecte {
+            sourceSet sourceSets.main
         }
     }
 }
