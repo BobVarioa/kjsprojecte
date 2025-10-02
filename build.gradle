@@ -1,77 +1,68 @@
 plugins {
-    id 'base'
-    id 'java'
-    id 'net.neoforged.moddev' version "2.0.82"
+    id 'java-library'
+    id 'maven-publish'
+    id 'idea'
+    id 'net.neoforged.moddev' version '2.0.96'
 }
 
-ext.ENV = System.getenv()
-version = project.mod_version
-group = project.maven_group
+version = mod_version
+group = mod_group_id
 
-base.archivesName = project.archives_name
+repositories {
+    mavenLocal()
+}
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 neoForge {
-    version = project.neoforge_version
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
 
     runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-
         client {
             client()
 
-            if (ENV.MC_CLIENT_ARGS) {
-                programArguments.addAll(ENV.MC_CLIENT_ARGS.split(' '))
-            }
-
-            jvmArguments.addAll("-XX:+IgnoreUnrecognizedVMOptions", "-XX:+AllowEnhancedClassRedefinition")
-            gameDirectory = file 'run'
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
         server {
             server()
-            programArgument("--nogui")
-            gameDirectory = file 'run_server'
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        data {
+            data()
+
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+
+            logLevel = org.slf4j.event.Level.DEBUG
         }
     }
 
     mods {
-        kubejsprojecte {
-            sourceSet sourceSets.main
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
         }
     }
 }
 
-compileJava {
-    options.encoding = "UTF-8"
-    options.release.set(21)
-}
-
-java {
-    sourceCompatibility = targetCompatibility = '21'
-    withSourcesJar()
-}
-
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-
-    maven {
-        name = 'NeoForged'
-        url = 'https://maven.neoforged.net/releases'
-    }
-
-
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
-        content {
-            includeGroup "org.parchmentmc.data"
-        }
-    }
-
     maven {
         url "https://maven.latvian.dev/releases"
         content {
@@ -93,53 +84,42 @@ repositories {
             includeGroup "curse.maven"
         }
     }
-
-    maven {
-        url "https://maven.architectury.dev/"
-        content {
-            includeGroup "dev.architectury"
-        }
-    }
 }
-
 
 dependencies {
     api "dev.latvian.mods:kubejs-neoforge:$kubejs_version"
+    interfaceInjectionData "dev.latvian.mods:kubejs-neoforge:$kubejs_version"
 
-    implementation "dev.latvian.mods:rhino:$rhino_version"
     implementation "curse.maven:projecte-226410:$projecte_version"
-    implementation "dev.architectury:architectury-neoforge:$architectury_version"
 }
 
-processResources {
-    inputs.property 'version', project.version
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [minecraft_version      : minecraft_version,
+                             minecraft_version_range: minecraft_version_range,
+                             neo_version            : neo_version,
+                             neo_version_range      : neo_version_range,
+                             loader_version_range   : loader_version_range,
+                             mod_id                 : mod_id,
+                             mod_name               : mod_name,
+                             mod_license            : mod_license,
+                             mod_version            : mod_version,
+                             mod_authors            : mod_authors,
+                             mod_description        : mod_description,
+                             kubejs_version: kubejs_version,
+    ]
 
-    filesMatching('META-INF/neoforge.mods.toml') {
-        expand version: project.version
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
     }
-}
-
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "kjsprojecte",
-                "Specification-Vendor"    : "bobvarioa",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : version,
-                "Implementation-Vendor"   : "bobvarioa",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-java {
-    withSourcesJar()
-
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
 }
